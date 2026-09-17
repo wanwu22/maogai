@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="color-scheme" content="light only">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>银龄e站暖阳行动 - 助老活动反馈意见表</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        /* ========== 暴力覆盖手机深色模式，全局强制亮色 ========== */
+        html, body {
+            color-scheme: light !important;
+            background-color: #ffffff !important;
+            color: #333333 !important;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            html, body, .paper-container, .report-card, .signature-modal, 
+            .signature-header, .signature-footer, .signature-canvas-box,
+            .notice-box, .option-item, .text-area-box, .signature-preview, 
+            .report-section, .fixed-logo {
+                background-color: #ffffff !important;
+                color: #333333 !important;
+            }
+            h1, h2, p, span, label, input, textarea, .section-title, .form-item, .satisfaction-item, .fixed-logo span {
+                color: #333333 !important;
+            }
+            .btn { color: #ffffff !important; }
+            input, textarea { border-color: #cbd5e1 !important; }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        /* 增加顶部内边距，防止右上角悬浮 Logo 遮挡标题 */
+        .paper-container { 
+            width: 100%; 
+            background: #ffffff !important; 
+            padding: 70px 15px 160px 15px; 
+            border-top: 6px solid #e86a4a; 
+            min-height: 100vh; 
+        }
+
+        /* ========== 右上角悬浮 Logo ========== */
+        .fixed-logo { 
+            position: fixed; 
+            top: 12px; 
+            right: 12px; 
+            z-index: 1000; 
+            display: flex; 
+            align-items: center; 
+            gap: 6px; 
+            background: #ffffff !important; 
+            padding: 6px 12px; 
+            border-radius: 25px; 
+            box-shadow: 0 4px 12px rgba(232, 106, 74, 0.15); 
+            border: 1px solid #fce4dc; 
+        }
+        .fixed-logo img { 
+            height: 24px; 
+            width: auto; 
+            display: block; 
+            object-fit: contain;
+        }
+        .fixed-logo span { 
+            font-size: 14px; 
+            font-weight: 900; 
+            color: #d15636; 
+            white-space: nowrap; 
+        }
+
+        .header { text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dashed #fce4dc; }
+        .header h1 { font-size: 20px; color: #d15636 !important; font-weight: 900; margin-bottom: 8px; }
+        .header p { font-size: 14px; color: #666 !important; font-weight: bold; }
+        .notice-box { background: #fff8f5 !important; border: 1px solid #fce4dc; border-radius: 8px; padding: 12px 15px; font-size: 14px; color: #a05236 !important; margin-bottom: 20px; font-weight: 600; }
+        
+        .section-title { font-size: 17px; font-weight: 900; color: #333 !important; margin: 25px 0 15px 0; display: flex; align-items: center; gap: 8px; }
+        .section-title::before { content: ''; display: inline-block; width: 5px; height: 18px; background: linear-gradient(180deg, #B7302B, #E86A4A); border-radius: 3px; }
+        
+        .form-row { display: flex; flex-direction: column; gap: 15px; margin-bottom: 15px; }
+        .form-item { display: flex; flex-direction: column; gap: 5px; font-size: 16px; font-weight: 600; width: 100%; }
+        .form-item input[type="text"] { width: 100%; border: 1px solid #cbd5e1 !important; border-radius: 8px; padding: 12px 15px; font-size: 16px; outline: none; background: #f8fafc !important; font-family: inherit; color: #333 !important; }
+        .form-item input[type="text"]:focus { border-color: #e86a4a !important; background: #fff !important; }
+        
+        .checkbox-group, .radio-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; }
+        .option-item { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 600; background: #f8fafc !important; padding: 14px 15px; border-radius: 10px; border: 1px solid #e2e8f0; min-height: 48px; color: #333 !important; }
+        input[type="checkbox"], input[type="radio"] { width: 22px; height: 22px; accent-color: #d15636; }
+
+        .satisfaction-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
+        .satisfaction-item { display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 14px; font-weight: bold; background: #f8fafc !important; padding: 12px 5px; border-radius: 10px; border: 1px solid #e2e8f0; color: #333 !important; }
+        .satisfaction-item .emoji { font-size: 24px; }
+        
+        .text-area-box { width: 100%; min-height: 100px; border: 1px dashed #cbd5e1 !important; border-radius: 10px; padding: 15px; font-size: 16px; background: #fdfbfb !important; outline: none; color: #333 !important; }
+        
+        .signature-area { margin-top: 30px; padding-top: 20px; border-top: 2px solid #fce4dc; display: flex; flex-direction: column; gap: 20px; }
+        .signature-item { display: flex; flex-direction: column; gap: 10px; font-size: 16px; font-weight: bold; color: #333 !important; }
+        .signature-preview { border: 1px dashed #cbd5e1 !important; border-radius: 8px; height: 80px; background: #ffffff !important; display: flex; align-items: center; justify-content: center; color: #94a3b8 !important; font-size: 14px; cursor: pointer; overflow: hidden; position: relative; }
+        .signature-preview img { width: 100%; height: 100%; object-fit: contain; background: #ffffff !important; }
+        .signature-preview span { font-size: 24px; }
+        .signature-preview .signed-tag { position: absolute; top: 5px; right: 5px; background: #e86a4a; color: #fff !important; font-size: 10px; padding: 2px 6px; border-radius: 10px; }
+
+        .float-btns { position: fixed; bottom: 0; left: 0; width: 100%; background: #ffffff !important; padding: 10px 15px; box-shadow: 0 -5px 15px rgba(0,0,0,0.08); display: flex; gap: 8px; z-index: 100; }
+        .btn { flex: 1; color: white !important; border: none; padding: 14px 0; font-size: 14px; font-weight: bold; border-radius: 12px; cursor: pointer; }
+        .btn-report { background: linear-gradient(135deg, #2b579a, #1e3f73); }
+        .btn-print { background: linear-gradient(135deg, #d15636, #e86a4a); }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 999; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay img { max-width: 100%; max-height: 70vh; border-radius: 8px; background: #ffffff !important; }
+        .modal-tip { color: #fff !important; font-size: 15px; font-weight: bold; margin-top: 15px; background: rgba(232, 106, 74, 0.9); padding: 8px 16px; border-radius: 20px; }
+        .modal-close { margin-top: 10px; color: #ccc !important; font-size: 14px; text-decoration: underline; cursor: pointer; }
+
+        .signature-modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #ffffff !important; z-index: 1000; display: none; flex-direction: column; }
+        .signature-header { background: #f8fafc !important; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; font-weight: bold; font-size: 15px; color: #333 !important; flex-shrink: 0; }
+        
+        .signature-canvas-box { flex-grow: 1; position: relative; background: #ffffff !important; overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        #signatureCanvas { width: 100%; max-width: 800px; height: auto; aspect-ratio: 2 / 1; background: #ffffff !important; border: 2px dashed #cbd5e1; border-radius: 12px; touch-action: none; cursor: crosshair; }
+
+        .signature-footer { padding: 12px 15px; display: flex; gap: 15px; background: #f8fafc !important; flex-shrink: 0; }
+        .sig-btn { flex: 1; padding: 15px; border-radius: 10px; border: none; font-weight: bold; font-size: 16px; }
+        .sig-btn-clear { background: #fff !important; border: 1px solid #cbd5e1; color: #333 !important; }
+        .sig-btn-save { background: linear-gradient(135deg, #d15636, #e86a4a); color: white !important; }
+
+        /* ========== 报告卡片（包含 Logo） ========== */
+        .report-card { display: none; width: 700px; background: #ffffff !important; padding: 30px; border-top: 8px solid #e86a4a; box-sizing: border-box; }
+        .report-header { text-align: center; margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; }
+        .report-header img { height: 45px; width: auto; object-fit: contain; margin-bottom: 10px; }
+        .report-header h2 { font-size: 22px; color: #d15636 !important; font-weight: 900; margin-bottom: 5px; }
+        .report-header p { font-size: 14px; color: #666 !important; }
+        
+        .report-section { margin-bottom: 15px; background: #fafbfc !important; padding: 15px 20px; border-radius: 10px; border: 1px solid #eef2f5; }
+        .report-item { font-size: 14px; margin-bottom: 6px; display: flex; }
+        .report-item .label { font-weight: bold; color: #555 !important; width: 100px; flex-shrink: 0; }
+        .report-item .value { font-weight: bold; color: #d15636 !important; flex-grow: 1; }
+        .report-signatures { display: flex; justify-content: space-between; margin-top: 25px; border-top: 1px dashed #fce4dc; padding-top: 15px; }
+        .report-sig-box { width: 48%; text-align: center; }
+        .report-sig-box .sig-label { font-size: 13px; color: #555 !important; font-weight: bold; margin-bottom: 5px; }
+        .report-sig-box .sig-img { height: 60px; border-bottom: 1px solid #ccc; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 3px; background: #ffffff !important; }
+        .report-sig-box .sig-img img { max-width: 100%; max-height: 100%; object-fit: contain; background: #ffffff !important; }
+        .report-date { font-size: 13px; color: #555 !important; font-weight: bold; margin-top: 15px; text-align: right; }
+    </style>
+</head>
+<body>
+    <!-- 右上角悬浮 Logo，使用你的原文件名 -->
+    <div class="fixed-logo">
+        <img src="1781252378577.png" alt="Logo" onerror="this.style.display='none'">
+        <span>银龄e站</span>
+    </div>
+
+    <div class="paper-container" id="formContent">
+        <div class="header">
+            <h1>银龄e站暖阳行动<br>助老活动反馈意见表</h1>
+            <p>请志愿者协助爷爷奶奶填写</p>
+        </div>
+        <div class="notice-box">
+            尊敬的爷爷奶奶：感谢您参加活动！为了今后更好地为您服务，请在符合您感受的选项上打“√”。
+        </div>
+
+        <div class="section-title">一、基本信息</div>
+        <div class="form-row">
+            <div class="form-item">姓名：<input type="text" id="name" placeholder="请填写姓名"></div>
+            <div class="form-item">年龄：<input type="text" id="age" placeholder="请填写年龄"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-item">活动日期：<input type="text" id="date" placeholder="____年__月__日"></div>
+            <div class="form-item">记录日期：<input type="text" id="record_date" placeholder="____年__月__日"></div>
+            <div class="form-item">活动地点：<input type="text" id="location" placeholder="社区/村组名称"></div>
+        </div>
+
+        <div class="section-title">二、活动反馈</div>
+        <div style="font-weight:bold;margin-bottom:10px;">1. 您对本次活动的整体感受：</div>
+        <div class="radio-group">
+            <label class="option-item"><input type="radio" name="overall" value="非常满意">非常满意</label>
+            <label class="option-item"><input type="radio" name="overall" value="满意">满意</label>
+            <label class="option-item"><input type="radio" name="overall" value="一般">一般</label>
+            <label class="option-item"><input type="radio" name="overall" value="不满意">不满意</label>
+        </div>
+        
+        <div style="font-weight:bold;margin:20px 0 10px;">2. 您最喜欢哪个环节？（可多选）</div>
+        <div class="checkbox-group">
+            <label class="option-item"><input type="checkbox" name="favorite" value="聊天倾诉">聊天倾诉</label>
+            <label class="option-item"><input type="checkbox" name="favorite" value="老歌传唱/听戏">老歌传唱/听戏</label>
+            <label class="option-item"><input type="checkbox" name="favorite" value="手工制作/非遗体验">手工制作/非遗体验</label>
+            <label class="option-item"><input type="checkbox" name="favorite" value="户外散步/结对陪伴">户外散步/结对陪伴</label>
+            <label class="option-item"><input type="checkbox" name="favorite" value="健康监测/量血压">健康监测/量血压</label>
+            <label class="option-item"><input type="checkbox" name="favorite" value="智能手机教学">智能手机教学</label>
+            <label class="option-item"><input type="checkbox" name="favorite" value="防诈骗知识科普">防诈骗知识科普</label>
+            <label class="option-item"><input type="checkbox" name="favorite" value="节日慰问/送温暖">节日慰问/送温暖</label>
+        </div>
+
+        <div style="font-weight:bold;margin:20px 0 10px;">3. 请为本次活动打分：</div>
+        <div class="satisfaction-row">
+            <label class="satisfaction-item"><span class="emoji">😄</span><input type="radio" name="score" value="5分">非常满意</label>
+            <label class="satisfaction-item"><span class="emoji">🙂</span><input type="radio" name="score" value="4分">比较满意</label>
+            <label class="satisfaction-item"><span class="emoji">😐</span><input type="radio" name="score" value="3分">一般</label>
+            <label class="satisfaction-item"><span class="emoji">🙁</span><input type="radio" name="score" value="2分">不太满意</label>
+            <label class="satisfaction-item"><span class="emoji">😞</span><input type="radio" name="score" value="1分">很不满意</label>
+        </div>
+        <div style="font-weight:bold;margin:20px 0 10px;">4. 今后活动建议：</div>
+        <textarea class="text-area-box" id="suggestions" placeholder="请填写建议..."></textarea>
+
+        <div class="section-title">三、服务确认</div>
+        <div class="signature-area">
+            <div class="signature-item">
+                参与老人签字：
+                <div class="signature-preview" id="preview_patient" onclick="openSignatureModal('patient')">
+                    <span>✍️ 点击手写签名</span>
+                </div>
+                <input type="hidden" id="sig_patient_data" value="">
+            </div>
+            <div class="signature-item">
+                志愿者签字：
+                <div class="signature-preview" id="preview_volunteer" onclick="openSignatureModal('volunteer')">
+                    <span>✍️ 点击手写签名</span>
+                </div>
+                <input type="hidden" id="sig_volunteer_data" value="">
+            </div>
+        </div>
+    </div>
+
+    <!-- 生成的精简报告结构（已加入 Logo） -->
+    <div class="report-card" id="reportContent">
+        <div class="report-header">
+            <img src="1781252378577.png" alt="Logo" onerror="this.style.display='none'">
+            <h2>银龄e站暖阳行动 · 反馈报告</h2>
+            <p>现场活动评估记录</p>
+        </div>
+        <div class="report-section">
+            <div class="report-item"><span class="label">参与老人：</span><span class="value" id="r_name">—</span> <span class="label">年龄：</span><span class="value" id="r_age">—</span></div>
+            <div class="report-item"><span class="label">活动日期：</span><span class="value" id="r_date">—</span> <span class="label">地点：</span><span class="value" id="r_location">—</span></div>
+        </div>
+        <div class="report-section">
+            <div class="report-item"><span class="label">整体感受：</span><span class="value" id="r_overall">—</span></div>
+            <div class="report-item"><span class="label">最喜欢环节：</span><span class="value" id="r_favorite">—</span></div>
+            <div class="report-item"><span class="label">满意度得分：</span><span class="value" id="r_score">—</span></div>
+        </div>
+        <div class="report-section">
+            <div class="report-item"><span class="label">服务建议：</span></div>
+            <div style="border: 1px solid #eee; padding: 10px; font-size: 14px; color: #333;" id="r_suggestions">—</div>
+        </div>
+        <div class="report-signatures">
+            <div class="report-sig-box"><div class="sig-label">参与老人签字：</div><div class="sig-img" id="r_sig_patient_box"></div></div>
+            <div class="report-sig-box"><div class="sig-label">志愿者签字：</div><div class="sig-img" id="r_sig_volunteer_box"></div></div>
+        </div>
+        <div class="report-date">记录日期：<span id="r_record_date">—</span></div>
+    </div>
+
+    <div class="float-btns">
+        <button class="btn btn-report" onclick="generateReport()">📄 生成精简报告</button>
+        <button class="btn btn-print" onclick="window.print()">🖨️ 打印/存PDF</button>
+    </div>
+
+    <div class="modal-overlay" id="imageModal">
+        <img id="previewImage" src="" alt="报告预览">
+        <div class="modal-tip">请长按上方图片，选择“保存图片”到相册</div>
+        <div class="modal-close" onclick="document.getElementById('imageModal').style.display='none'">关闭</div>
+    </div>
+
+    <div class="signature-modal" id="signatureModal">
+        <div class="signature-header">
+            <span>请在下方直接手写签名</span>
+            <span id="sigTypeLabel" style="color:#d15636;">参与老人签字</span>
+        </div>
+        <div class="signature-canvas-box" id="canvasBox">
+            <canvas id="signatureCanvas"></canvas>
+        </div>
+        <div class="signature-footer">
+            <button class="sig-btn sig-btn-clear" onclick="clearCanvas()">清除重写</button>
+            <button class="sig-btn sig-btn-save" onclick="saveSignature()">确认签名</button>
+        </div>
+    </div>
+
+    <script>
+        var canvas = document.getElementById('signatureCanvas');
+        var ctx = canvas.getContext('2d');
+        var isDrawing = false;
+        var currentSigType = '';
+        var lastX = 0; var lastY = 0;
+
+        function initCanvas() {
+            canvas.width = 800;
+            canvas.height = 400;
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.lineWidth = 6; 
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.strokeStyle = '#222222'; 
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var now = new Date();
+            var pad = function(n) { return n < 10 ? '0' + n : n; };
+            var todayStr = now.getFullYear() + '年' + pad(now.getMonth() + 1) + '月' + pad(now.getDate()) + '日';
+            if (document.getElementById('date')) document.getElementById('date').value = todayStr;
+            if (document.getElementById('record_date')) document.getElementById('record_date').value = todayStr;
+
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+            canvas.addEventListener('touchstart', handleTouchStart, {passive: false});
+            canvas.addEventListener('touchmove', handleTouchMove, {passive: false});
+            canvas.addEventListener('touchend', stopDrawing);
+        });
+
+        function openSignatureModal(type) {
+            currentSigType = type;
+            document.getElementById('signatureModal').style.display = 'flex';
+            document.getElementById('sigTypeLabel').innerText = type === 'patient' ? '参与老人签字' : '志愿者签字';
+            setTimeout(initCanvas, 50);
+        }
+
+        function clearCanvas() { 
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height); 
+        }
+
+        function getPos(e) {
+            var rect = canvas.getBoundingClientRect();
+            var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            var clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            
+            var scaleX = canvas.width / rect.width;
+            var scaleY = canvas.height / rect.height;
+            
+            return { 
+                x: (clientX - rect.left) * scaleX, 
+                y: (clientY - rect.top) * scaleY 
+            };
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            var pos = getPos(e);
+            lastX = pos.x; lastY = pos.y;
+            e.preventDefault();
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            var pos = getPos(e);
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+            lastX = pos.x; lastY = pos.y;
+            e.preventDefault();
+        }
+
+        function stopDrawing(e) { isDrawing = false; if (e) e.preventDefault(); }
+        function handleTouchStart(e) { startDrawing(e); }
+        function handleTouchMove(e) { draw(e); }
+
+        function saveSignature() {
+            var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            var data = imageData.data;
+            var hasContent = false;
+            for (var i = 0; i < data.length; i += 4) {
+                if (data[i] < 250 || data[i+1] < 250 || data[i+2] < 250) { hasContent = true; break; }
+            }
+            if (!hasContent) { alert('请先手写签名'); return; }
+
+            var finalDataURL = canvas.toDataURL('image/png');
+
+            var previewDiv = currentSigType === 'patient' ? document.getElementById('preview_patient') : document.getElementById('preview_volunteer');
+            var hiddenInput = currentSigType === 'patient' ? document.getElementById('sig_patient_data') : document.getElementById('sig_volunteer_data');
+
+            previewDiv.innerHTML = '<img src="' + finalDataURL + '"><div class="signed-tag">已签名</div>';
+            hiddenInput.value = finalDataURL;
+            document.getElementById('signatureModal').style.display = 'none';
+        }
+
+        function getCheckedValues(name) {
+            var checked = document.querySelectorAll('input[name="' + name + '"]:checked');
+            var values = Array.from(checked).map(function(cb) { return cb.value; });
+            return values.length > 0 ? values.join('、') : '未填写';
+        }
+
+        function generateReport() {
+            document.getElementById('r_name').innerText = document.getElementById('name').value || '未填写';
+            document.getElementById('r_age').innerText = document.getElementById('age').value || '未填写';
+            document.getElementById('r_date').innerText = document.getElementById('date').value || '未填写';
+            document.getElementById('r_location').innerText = document.getElementById('location').value || '未填写';
+            
+            document.getElementById('r_overall').innerText = getCheckedValues('overall');
+            document.getElementById('r_favorite').innerText = getCheckedValues('favorite');
+            document.getElementById('r_score').innerText = getCheckedValues('score');
+
+            var sugg = document.getElementById('suggestions').value;
+            document.getElementById('r_suggestions').innerText = sugg ? sugg : '（无具体建议）';
+            document.getElementById('r_record_date').innerText = document.getElementById('record_date').value || '未填写';
+
+            var sigPatient = document.getElementById('sig_patient_data').value;
+            var sigVolunteer = document.getElementById('sig_volunteer_data').value;
+            document.getElementById('r_sig_patient_box').innerHTML = sigPatient ? '<img src="' + sigPatient + '">' : '未签名';
+            document.getElementById('r_sig_volunteer_box').innerHTML = sigVolunteer ? '<img src="' + sigVolunteer + '">' : '未签名';
+
+            var reportCard = document.getElementById('reportContent');
+            reportCard.style.display = 'block';
+            reportCard.style.position = 'absolute';
+            reportCard.style.left = '-9999px';
+
+            html2canvas(reportCard, { scale: 2, useCORS: true, backgroundColor: '#ffffff' }).then(function(canvas) {
+                reportCard.style.display = 'none';
+                document.getElementById('previewImage').src = canvas.toDataURL('image/png');
+                document.getElementById('imageModal').style.display = 'flex';
+            }).catch(function() {
+                reportCard.style.display = 'none';
+                alert('生成失败，请重试');
+            });
+        }
+    </script>
+</body>
+</html>
