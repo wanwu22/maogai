@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>银龄e站暖阳行动 - 助老活动反馈意见表</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', 'Noto Sans SC', sans-serif;
+            background-color: #f4f6f9;
+            color: #333333;
+            line-height: 1.6;
+            padding-bottom: 90px;
+        }
+
+        .paper-container {
+            width: 100%;
+            background: #ffffff;
+            padding: 20px 15px;
+            border-top: 6px solid #e86a4a;
+            min-height: 100vh;
+        }
+
+        .header { text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dashed #fce4dc; }
+        .header h1 { font-size: 20px; color: #d15636; font-weight: 900; margin-bottom: 8px; line-height: 1.3; }
+        .header p { font-size: 14px; color: #666; font-weight: bold; }
+
+        .notice-box {
+            background: #fff8f5; border: 1px solid #fce4dc; border-radius: 8px;
+            padding: 12px 15px; font-size: 14px; color: #a05236; margin-bottom: 20px; font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .section-title {
+            font-size: 17px; font-weight: 900; color: #333;
+            margin: 25px 0 15px 0; display: flex; align-items: center; gap: 8px;
+        }
+        .section-title::before {
+            content: ''; display: inline-block; width: 5px; height: 18px;
+            background: linear-gradient(180deg, #B7302B, #E86A4A); border-radius: 3px;
+        }
+
+        .form-row { display: flex; flex-direction: column; gap: 15px; margin-bottom: 15px; }
+        .form-item { display: flex; flex-direction: column; gap: 5px; font-size: 16px; font-weight: 600; width: 100%; }
+        .form-item input[type="text"] {
+            width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 15px;
+            font-size: 16px; outline: none; background: #f8fafc; font-family: inherit; transition: border-color 0.3s;
+            color: #333;
+        }
+        .form-item input[type="text"]:focus { border-color: #e86a4a; background: #fff; }
+        
+        .checkbox-group, .radio-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; }
+        .option-item {
+            display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 600;
+            cursor: pointer; background: #f8fafc; padding: 14px 15px; border-radius: 10px;
+            border: 1px solid #e2e8f0; transition: all 0.2s; min-height: 48px;
+        }
+        .option-item:active { background: #fff5f0; border-color: #fce4dc; }
+        input[type="checkbox"], input[type="radio"] { width: 22px; height: 22px; accent-color: #d15636; flex-shrink: 0; }
+
+        .satisfaction-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
+        .satisfaction-item {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 5px; font-size: 14px; font-weight: bold; cursor: pointer;
+            background: #f8fafc; padding: 12px 5px; border-radius: 10px; border: 1px solid #e2e8f0;
+        }
+        .satisfaction-item .emoji { font-size: 24px; }
+
+        .text-area-box {
+            width: 100%; min-height: 100px; border: 1px dashed #cbd5e1; border-radius: 10px;
+            padding: 15px; font-size: 16px; font-family: inherit; resize: vertical;
+            outline: none; background: #fdfbfb; transition: border-color 0.3s;
+        }
+
+        /* 签名区 */
+        .signature-area { margin-top: 30px; padding-top: 20px; border-top: 2px solid #fce4dc; display: flex; flex-direction: column; gap: 20px; }
+        .signature-item { display: flex; flex-direction: column; gap: 10px; font-size: 16px; font-weight: bold; }
+        .signature-preview {
+            border: 1px dashed #cbd5e1; border-radius: 8px; height: 60px; background: #f8fafc;
+            display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 14px;
+            font-weight: normal; cursor: pointer; overflow: hidden; position: relative;
+        }
+        .signature-preview img { width: 100%; height: 100%; object-fit: contain; }
+        .signature-preview span { font-size: 24px; }
+
+        /* 底部固定操作栏 */
+        .float-btns {
+            position: fixed; bottom: 0; left: 0; width: 100%; background: #ffffff;
+            padding: 12px 15px; box-shadow: 0 -5px 15px rgba(0,0,0,0.08);
+            display: flex; gap: 8px; z-index: 100;
+        }
+        .btn {
+            flex: 1; color: white; border: none; padding: 14px 0; font-size: 14px; font-weight: bold;
+            border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;
+        }
+        .btn-report { background: linear-gradient(135deg, #2b579a, #1e3f73); box-shadow: 0 5px 15px rgba(43, 87, 154, 0.3); }
+        .btn-print { background: linear-gradient(135deg, #d15636, #e86a4a); box-shadow: 0 5px 15px rgba(209, 86, 54, 0.3); }
+
+        /* 弹窗遮罩 */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 999;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            padding: 15px;
+        }
+        .modal-overlay img { max-width: 100%; max-height: 70vh; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .modal-tip { color: #fff; font-size: 15px; font-weight: bold; margin-top: 15px; text-align: center; background: rgba(232, 106, 74, 0.9); padding: 8px 16px; border-radius: 20px; }
+        .modal-close { margin-top: 10px; color: #ccc; font-size: 14px; text-decoration: underline; cursor: pointer; }
+
+        /* 手写签名专属弹窗 - 强制横屏UI模式 */
+        .signature-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #fff; z-index: 1000; display: none; flex-direction: column;
+        }
+        /* 旋转90度，强制横屏书写 */
+        .signature-modal.landscape-mode {
+            width: 100vh;
+            height: 100vw;
+            transform: rotate(90deg) translateY(-100%);
+            transform-origin: top left;
+        }
+        .signature-header {
+            background: #f8fafc; padding: 10px 15px; display: flex; justify-content: space-between;
+            align-items: center; border-bottom: 1px solid #e2e8f0; font-weight: bold; color: #333; font-size: 14px;
+        }
+        .signature-canvas-box {
+            flex-grow: 1; position: relative; overflow: hidden; background: #fff;
+            border-bottom: 1px dashed #cbd5e1;
+        }
+        #signatureCanvas {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; touch-action: none;
+        }
+        .signature-footer {
+            padding: 10px 15px; display: flex; gap: 10px; background: #f8fafc;
+        }
+        .sig-btn {
+            flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: bold; font-size: 15px;
+        }
+        .sig-btn-clear { background: #fff; border: 1px solid #cbd5e1; color: #333; }
+        .sig-btn-save { background: linear-gradient(135deg, #d15636, #e86a4a); color: white; }
+
+        /* 精简报告卡片 */
+        .report-card {
+            display: none; width: 700px; background: #ffffff; padding: 30px;
+            border-top: 8px solid #e86a4a; box-sizing: border-box;
+        }
+        .report-header { text-align: center; margin-bottom: 20px; }
+        .report-header h2 { font-size: 22px; color: #d15636; font-weight: 900; margin-bottom: 5px; }
+        .report-header p { font-size: 14px; color: #666; }
+        
+        /* 报告内容优化：去掉未填写的冗余项 */
+        .report-section { margin-bottom: 15px; background: #fafbfc; padding: 15px 20px; border-radius: 10px; border: 1px solid #eef2f5; }
+        .report-section-title { font-size: 15px; font-weight: bold; color: #d15636; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px dashed #eef2f5; }
+        .report-item { font-size: 14px; color: #333; margin-bottom: 6px; line-height: 1.5; display: flex; }
+        .report-item .label { font-weight: bold; color: #555; width: 100px; flex-shrink: 0; }
+        .report-item .value { font-weight: bold; color: #d15636; flex-grow: 1; }
+        .report-item .value.empty { color: #999; font-weight: normal; }
+        
+        .report-signatures { display: flex; justify-content: space-between; margin-top: 25px; border-top: 1px dashed #fce4dc; padding-top: 15px; }
+        .report-sig-box { width: 48%; text-align: center; }
+        .report-sig-box .sig-label { font-size: 13px; color: #555; font-weight: bold; margin-bottom: 5px; }
+        .report-sig-box .sig-img { height: 50px; border-bottom: 1px solid #ccc; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 3px; }
+        .report-sig-box .sig-img img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .report-date { font-size: 13px; color: #555; font-weight: bold; margin-top: 15px; text-align: right; }
+
+        @media print {
+            .float-btns, .modal-overlay, .signature-modal { display: none; }
+            .paper-container { border-top: none; padding: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 填写表单区 -->
+    <div class="paper-container" id="formContent">
+        <div class="header">
+            <h1>银龄e站暖阳行动<br>助老活动反馈意见表</h1>
+            <p>请志愿者协助爷爷奶奶填写</p>
+        </div>
+
+        <div class="notice-box">
+            尊敬的爷爷奶奶：感谢您参加活动！为了今后更好地为您服务，请在符合您感受的选项上打“√”。此表仅用于改进我们的服务，不会泄露您的隐私。
+        </div>
+
+        <div class="section-title">一、基本信息</div>
+        <div class="form-row">
+            <div class="form-item">姓名：<input type="text" id="name" placeholder="请填写姓名"></div>
+            <div class="form-item">年龄：<input type="text" id="age" placeholder="请填写年龄"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-item">活动日期：<input type="text" id="date" placeholder="____年__月__日"></div>
+            <div class="form-item">记录日期：<input type="text" id="record_date" placeholder="____年__月__日"></div>
+            <div class="form-item">活动地点：<input type="text" id="location" placeholder="社区/村组名称"></div>
+        </div>
+
+        <div style="font-size: 16px; font-weight: bold; margin: 15px 0 10px 0;">本次参加的活动是：</div>
+        <div class="checkbox-group">
+            <label class="option-item"><input type="checkbox" name="activity" value="暖阳谈心会">暖阳谈心会</label>
+            <label class="option-item"><input type="checkbox" name="activity" value="一对一陪伴">一对一陪伴</label>
+            <label class="option-item"><input type="checkbox" name="activity" value="方言电话专线">方言电话专线</label>
+            <label class="option-item"><input type="checkbox" name="activity" value="手工/非遗体验">手工/非遗体验</label>
+            <label class="option-item"><input type="checkbox" name="activity" value="健康监测/科普">健康监测/科普</label>
+        </div>
+
+        <div class="section-title">二、活动反馈</div>
+        
+        <div style="font-size: 16px; font-weight: bold; margin-bottom: 10px;">1. 您对本次活动的整体感受：</div>
+        <div class="radio-group">
+            <label class="option-item"><input type="radio" name="overall" value="非常满意">非常满意</label>
+            <label class="option-item"><input type="radio" name="overall" value="满意">满意</label>
+            <label class="option-item"><input type="radio" name="overall" value="一般">一般</label>
+            <label class="option-item"><input type="radio" name="overall" value="不满意">不满意</label>
+        </div>
+
+        <div style="font-size: 16px; font-weight: bold; margin: 20px 0 10px 0;">2. 您最喜欢哪个环节？（可多选）</div>
+        <div class="checkbox-group">
+            <label class="option-item"><input type="checkbox" name="favorite" value="聊天倾诉">聊天倾诉</label>
+            <label class="option-item"><input type="checkbox" name="favorite" value="老歌传唱">老歌传唱</label>
+            <label class="option-item"><input type="checkbox" name="favorite" value="手工制作">手工制作</label>
+            <label class="option-item"><input type="checkbox" name="favorite" value="游戏互动">游戏互动</label>
+            <label class="option-item"><input type="checkbox" name="favorite" value="健康检查">健康检查</label>
+            <label class="option-item"><input type="checkbox" name="favorite" value="反诈科普">反诈科普</label>
+        </div>
+
+        <div style="font-size: 16px; font-weight: bold; margin: 20px 0 10px 0;">3. 您觉得志愿者的服务态度怎么样？</div>
+        <div class="radio-group">
+            <label class="option-item"><input type="radio" name="attitude" value="很亲切，有耐心">很亲切，有耐心</label>
+            <label class="option-item"><input type="radio" name="attitude" value="态度一般">态度一般</label>
+            <label class="option-item"><input type="radio" name="attitude" value="有些急躁，需要改进">有些急躁，需要改进</label>
+        </div>
+
+        <div style="font-size: 16px; font-weight: bold; margin: 20px 0 10px 0;">4. 本次活动有没有帮到您？（可多选）</div>
+        <div class="checkbox-group">
+            <label class="option-item"><input type="checkbox" name="helpful" value="心情变好了，不孤单">心情变好了，不孤单</label>
+            <label class="option-item"><input type="checkbox" name="helpful" value="学会了一点小技能">学会了一点小技能（如剪纸/用手机）</label>
+            <label class="option-item"><input type="checkbox" name="helpful" value="了解了健康/防骗知识">了解了健康/防骗知识</label>
+        </div>
+
+        <div style="font-size: 16px; font-weight: bold; margin: 20px 0 10px 0;">5. 请为本次活动打分：</div>
+        <div class="satisfaction-row">
+            <label class="satisfaction-item"><span class="emoji">😄</span><input type="radio" name="score" value="5分（非常满意）">非常满意(5分)</label>
+            <label class="satisfaction-item"><span class="emoji">🙂</span><input type="radio" name="score" value="4分（比较满意）">比较满意(4分)</label>
+            <label class="satisfaction-item"><span class="emoji">😐</span><input type="radio" name="score" value="3分（一般）">一般(3分)</label>
+            <label class="satisfaction-item"><span class="emoji">🙁</span><input type="radio" name="score" value="2分（不太满意）">不太满意(2分)</label>
+            <label class="satisfaction-item"><span class="emoji">😞</span><input type="radio" name="score" value="1分（很不满意）">很不满意(1分)</label>
+        </div>
+
+        <div class="section-title">三、今后建议与需求</div>
+        <div style="font-size: 16px; font-weight: bold; margin-bottom: 10px;">1. 您希望我们今后多开展哪些活动？（可多选）</div>
+        <div class="checkbox-group">
+            <label class="option-item"><input type="checkbox" name="future" value="聊天陪伴">聊天陪伴</label>
+            <label class="option-item"><input type="checkbox" name="future" value="唱歌/听戏">唱歌/听戏</label>
+            <label class="option-item"><input type="checkbox" name="future" value="手工剪纸/编织">手工剪纸/编织</label>
+            <label class="option-item"><input type="checkbox" name="future" value="智能手机教学">智能手机教学</label>
+            <label class="option-item"><input type="checkbox" name="future" value="健康讲座/体检">健康讲座/体检</label>
+            <label class="option-item"><input type="checkbox" name="future" value="防诈骗宣传">防诈骗宣传</label>
+        </div>
+
+        <div style="font-size: 16px; font-weight: bold; margin: 20px 0 10px 0;">2. 您对“银龄e站”今后的服务有什么建议？</div>
+        <textarea class="text-area-box" id="suggestions" placeholder="请在此处填写您的宝贵建议..."></textarea>
+
+        <!-- 签名区域 -->
+        <div class="section-title">四、服务确认</div>
+        <div class="signature-area">
+            <div class="signature-item">
+                参与老人签字：
+                <div class="signature-preview" id="preview_patient" onclick="openSignatureModal('patient')">
+                    <span>✍️ 点击手写签名</span>
+                </div>
+                <input type="hidden" id="sig_patient_data" value="">
+            </div>
+            <div class="signature-item">
+                志愿者签字：
+                <div class="signature-preview" id="preview_volunteer" onclick="openSignatureModal('volunteer')">
+                    <span>✍️ 点击手写签名</span>
+                </div>
+                <input type="hidden" id="sig_volunteer_data" value="">
+            </div>
+        </div>
+    </div>
+
+    <!-- 隐藏的精简报告卡片 -->
+    <div class="report-card" id="reportContent">
+        <div class="report-header">
+            <h2>银龄e站暖阳行动 · 反馈报告</h2>
+            <p>现场活动评估记录</p>
+        </div>
+        <div class="report-section" id="r_basic_info">
+            <div class="report-item"><span class="label">参与老人：</span><span class="value" id="r_name">—</span> &nbsp; &nbsp; <span class="label">年龄：</span><span class="value" id="r_age">—</span></div>
+            <div class="report-item"><span class="label">活动日期：</span><span class="value" id="r_date">—</span> &nbsp; &nbsp; <span class="label">活动地点：</span><span class="value" id="r_location">—</span></div>
+        </div>
+        
+        <div class="report-section" id="r_feedback_section">
+            <div class="report-section-title">活动反馈</div>
+            <div class="report-item" id="r_item_activity"><span class="label">参与活动：</span><span class="value" id="r_activity">—</span></div>
+            <div class="report-item" id="r_item_overall"><span class="label">整体感受：</span><span class="value" id="r_overall">—</span></div>
+            <div class="report-item" id="r_item_favorite"><span class="label">最喜欢环节：</span><span class="value" id="r_favorite">—</span></div>
+            <div class="report-item" id="r_item_attitude"><span class="label">志愿者评价：</span><span class="value" id="r_attitude">—</span></div>
+            <div class="report-item" id="r_item_helpful"><span class="label">活动获得感：</span><span class="value" id="r_helpful">—</span></div>
+            <div class="report-item" id="r_item_score"><span class="label">满意度得分：</span><span class="value" id="r_score">—</span></div>
+        </div>
+        
+        <div class="report-section" id="r_future_section">
+            <div class="report-section-title">未来建议与需求</div>
+            <div class="report-item" id="r_item_future"><span class="label">未来期望：</span><span class="value" id="r_future">—</span></div>
+            <div class="report-item" id="r_item_suggestions"><span class="label">服务建议：</span></div>
+            <div style="border: 1px solid #eee; padding: 10px; border-radius: 6px; min-height: 40px; font-size: 14px; color: #333; line-height: 1.5; margin-left: 100px;" id="r_suggestions">—</div>
+        </div>
+        
+        <div class="report-signatures">
+            <div class="report-sig-box">
+                <div class="sig-label">参与老人签字：</div>
+                <div class="sig-img" id="r_sig_patient_box"></div>
+            </div>
+            <div class="report-sig-box">
+                <div class="sig-label">志愿者签字：</div>
+                <div class="sig-img" id="r_sig_volunteer_box"></div>
+            </div>
+        </div>
+        <div class="report-date">记录日期：<span id="r_record_date">—</span></div>
+    </div>
+
+    <!-- 底部固定操作栏 -->
+    <div class="float-btns">
+        <button class="btn btn-report" onclick="generateReport()">📄 生成精简报告</button>
+        <button class="btn btn-print" onclick="window.print()">🖨️ 打印/存PDF</button>
+    </div>
+
+    <!-- 图片预览弹窗 -->
+    <div class="modal-overlay" id="imageModal">
+        <img id="previewImage" src="" alt="报告预览">
+        <div class="modal-tip">请长按上方图片，选择“保存图片”到相册</div>
+        <div class="modal-close" onclick="closeModal()">关闭</div>
+    </div>
+
+    <!-- 手写签名专属弹窗 -->
+    <div class="signature-modal" id="signatureModal">
+        <div class="signature-header">
+            <span>请横屏书写，名字更完整</span>
+            <span id="sigTypeLabel" style="color:#d15636;">参与老人签字</span>
+        </div>
+        <div class="signature-canvas-box">
+            <canvas id="signatureCanvas"></canvas>
+        </div>
+        <div class="signature-footer">
+            <button class="sig-btn sig-btn-clear" onclick="clearCanvas()">清除重写</button>
+            <button class="sig-btn sig-btn-save" onclick="saveSignature()">确认签名</button>
+        </div>
+    </div>
+
+    <script>
+        // 签名相关变量
+        var canvas = document.getElementById('signatureCanvas');
+        var ctx = canvas.getContext('2d');
+        var isDrawing = false;
+        var currentSigType = '';
+        var lastX = 0;
+        var lastY = 0;
+
+        // 初始化 Canvas 尺寸（适应横屏）
+        function initCanvas() {
+            var box = canvas.parentElement;
+            var w = box.clientWidth;
+            var h = box.clientHeight;
+            canvas.width = w;
+            canvas.height = h;
+            ctx.lineWidth = 5; // 横屏后线条加粗，更醒目
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.strokeStyle = '#333';
+        }
+
+        // 监听屏幕旋转（横竖屏切换时重新设置画布尺寸）
+        window.addEventListener('resize', function() {
+            if (document.getElementById('signatureModal').style.display === 'flex') {
+                initCanvas();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = now.getMonth() + 1;
+            var day = now.getDate();
+            function pad(n) { return n < 10 ? '0' + n : n; }
+            var todayStr = year + '年' + pad(month) + '月' + pad(day) + '日';
+
+            var dateInput = document.getElementById('date');
+            var recordDateInput = document.getElementById('record_date');
+            
+            if (dateInput && !dateInput.value) dateInput.value = todayStr;
+            if (recordDateInput && !recordDateInput.value) recordDateInput.value = todayStr;
+
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+
+            canvas.addEventListener('touchstart', handleTouchStart, {passive: false});
+            canvas.addEventListener('touchmove', handleTouchMove, {passive: false});
+            canvas.addEventListener('touchend', stopDrawing);
+        });
+
+        // 打开签名弹窗
+        function openSignatureModal(type) {
+            currentSigType = type;
+            var modal = document.getElementById('signatureModal');
+            modal.style.display = 'flex';
+            
+            // 强制添加横屏样式（在竖屏手机上，物理旋转手机后，UI也随之匹配）
+            // 这里我们采用 UI 上的横屏宽幅设计，不再强制旋转 transform，因为 rotation 会干扰触摸事件。
+            // 改为：在竖屏手机上，签名框是横长条，高度足够即可。
+            document.getElementById('sigTypeLabel').innerText = type === 'patient' ? '参与老人签字' : '志愿者签字';
+            
+            setTimeout(initCanvas, 100);
+            clearCanvas();
+        }
+
+        function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+
+        function getPos(e) {
+            var rect = canvas.getBoundingClientRect();
+            var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            var clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return { x: clientX - rect.left, y: clientY - rect.top };
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            var pos = getPos(e);
+            lastX = pos.x; lastY = pos.y;
+            e.preventDefault();
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            var pos = getPos(e);
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+            lastX = pos.x; lastY = pos.y;
+            e.preventDefault();
+        }
+
+        function stopDrawing(e) { isDrawing = false; if (e) e.preventDefault(); }
+        function handleTouchStart(e) { startDrawing(e); }
+        function handleTouchMove(e) { draw(e); }
+
+        function saveSignature() {
+            var blank = document.createElement('canvas');
+            blank.width = canvas.width; blank.height = canvas.height;
+            if (canvas.toDataURL() === blank.toDataURL()) { alert('请先手写签名'); return; }
+
+            var dataURL = canvas.toDataURL('image/png');
+            if (currentSigType === 'patient') {
+                document.getElementById('preview_patient').innerHTML = '<img src="' + dataURL + '">';
+                document.getElementById('sig_patient_data').value = dataURL;
+            } else {
+                document.getElementById('preview_volunteer').innerHTML = '<img src="' + dataURL + '">';
+                document.getElementById('sig_volunteer_data').value = dataURL;
+            }
+            document.getElementById('signatureModal').style.display = 'none';
+        }
+
+        // 辅助函数：获取选中值
+        function getCheckedValues(name) {
+            var checked = document.querySelectorAll('input[name="' + name + '"]:checked');
+            var values = Array.from(checked).map(function(cb) { return cb.value; });
+            return values.length > 0 ? values.join('、') : '未填写';
+        }
+
+        // 辅助函数：控制报告的显示/隐藏以去除未填写的项
+        function toggleReportItem(id, value) {
+            var el = document.getElementById(id);
+            if (value === '未填写') {
+                el.style.display = 'none';
+            } else {
+                el.style.display = 'flex';
+                el.querySelector('.value').innerText = value;
+            }
+        }
+
+        // 生成精简报告
+        function generateReport() {
+            // 基本信息
+            document.getElementById('r_name').innerText = document.getElementById('name').value || '未填写';
+            document.getElementById('r_age').innerText = document.getElementById('age').value || '未填写';
+            document.getElementById('r_date').innerText = document.getElementById('date').value || '未填写';
+            document.getElementById('r_location').innerText = document.getElementById('location').value || '未填写';
+
+            // 活动反馈（动态显隐，去除未填写内容，使报告更紧凑）
+            var activity = getCheckedValues('activity');
+            var overall = getCheckedValues('overall');
+            var favorite = getCheckedValues('favorite');
+            var attitude = getCheckedValues('attitude');
+            var helpful = getCheckedValues('helpful');
+            var score = getCheckedValues('score');
+
+            toggleReportItem('r_item_activity', activity);
+            toggleReportItem('r_item_overall', overall);
+            toggleReportItem('r_item_favorite', favorite);
+            toggleReportItem('r_item_attitude', attitude);
+            toggleReportItem('r_item_helpful', helpful);
+            toggleReportItem('r_item_score', score);
+
+            // 未来建议与需求
+            var future = getCheckedValues('future');
+            toggleReportItem('r_item_future', future);
+            
+            var sugg = document.getElementById('suggestions').value;
+            if (!sugg) {
+                document.getElementById('r_item_suggestions').style.display = 'none';
+            } else {
+                document.getElementById('r_item_suggestions').style.display = 'flex';
+                document.getElementById('r_suggestions').innerText = sugg;
+            }
+
+            // 记录日期
+            var recordDate = document.getElementById('record_date').value || '未填写';
+            document.getElementById('r_record_date').innerText = recordDate;
+
+            // 签名图片
+            var sigPatient = document.getElementById('sig_patient_data').value;
+            var sigVolunteer = document.getElementById('sig_volunteer_data').value;
+            document.getElementById('r_sig_patient_box').innerHTML = sigPatient ? '<img src="' + sigPatient + '">' : '<span style="color:#ccc;font-size:13px;font-weight:normal;">未签名</span>';
+            document.getElementById('r_sig_volunteer_box').innerHTML = sigVolunteer ? '<img src="' + sigVolunteer + '">' : '<span style="color:#ccc;font-size:13px;font-weight:normal;">未签名</span>';
+
+            // 如果所有反馈都没填，就隐藏整个反馈区域，防止出现大片空白
+            var hasFeedback = [activity, overall, favorite, attitude, helpful, score].some(v => v !== '未填写');
+            document.getElementById('r_feedback_section').style.display = hasFeedback ? 'block' : 'none';
+
+            // 截图
+            var reportCard = document.getElementById('reportContent');
+            reportCard.style.display = 'block';
+            reportCard.style.position = 'absolute';
+            reportCard.style.left = '-9999px';
+
+            html2canvas(reportCard, {
+                scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false
+            }).then(function(canvas) {
+                reportCard.style.display = 'none';
+                var imgData = canvas.toDataURL('image/png');
+                document.getElementById('previewImage').src = imgData;
+                document.getElementById('imageModal').style.display = 'flex';
+            }).catch(function(error) {
+                reportCard.style.display = 'none';
+                alert('生成报告图片失败，请重试或使用“打印/存PDF”。');
+            });
+        }
+
+        function closeModal() { document.getElementById('imageModal').style.display = 'none'; }
+    </script>
+</body>
+</html>
